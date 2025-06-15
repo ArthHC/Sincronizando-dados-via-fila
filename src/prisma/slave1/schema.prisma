@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../src/prisma/slave1"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SLAVE1_DATABASE_URL")
+}
+
+model Pessoa {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  idade Int
+  cpf   String @unique
+}
+
+model Livro {
+  id     Int    @id @default(autoincrement())
+  titulo String
+  autor  String
+  ano    Int
+}
