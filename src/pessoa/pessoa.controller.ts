@@ -7,30 +7,19 @@ import { PrismaClient as Slave2Client } from '../../src/prisma/slave2';
 export class PessoaController {
   constructor(private readonly service: PessoaService) { }
 
-  @Get('test-slaves')
-  async testSlaves() {
-    try {
-      const slave1 = new Slave1Client();
-      const slave2 = new Slave2Client();
+  @Get()
+  findAllOnMaster() {
+    return this.service.findAllPessoasOnMaster();
+  }
 
-      await slave1.$connect();
-      await slave2.$connect();
+  @Get('slave1')
+  findAllOnSlave1() {
+    return this.service.findAllPessoasOnSlave1();
+  }
 
-      const count1 = await slave1.pessoa.count();
-      const count2 = await slave2.pessoa.count();
-
-      return {
-        slave1_connected: true,
-        slave2_connected: true,
-        slave1_count: count1,
-        slave2_count: count2
-      };
-    } catch (error) {
-      return {
-        error: error.message,
-        stack: error.stack
-      };
-    }
+  @Get('slave2')
+  findAllOnSlave2() {
+    return this.service.findAllPessoasOnSlave2();
   }
 
   @Post()

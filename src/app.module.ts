@@ -12,6 +12,7 @@ import './queue/sync.worker';
 import { QueueModule } from './queue/queue.module';
 import { LivroController } from './livro/livro.controller';
 import { LivroService } from './livro/livro.service';
+import { PrismaClient } from '@prisma/client';
 
 
 @Module({
@@ -33,6 +34,15 @@ import { LivroService } from './livro/livro.service';
     PrismaSlave2Service,
     QueueService,
     ConfigService,
+    PrismaClient,
+  ],
+  exports: [
+    PessoaService,
+    LivroService,
+    PrismaMasterService,
+    PrismaSlave1Service,
+    PrismaSlave2Service,
+    QueueService,
   ],
 })
 export class AppModule { }

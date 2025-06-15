@@ -1,13 +1,25 @@
-import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { LivroService } from "./livro.service";
-import { PrismaClient as Slave1Client } from '../../src/prisma/slave1';
-import { PrismaClient as Slave2Client } from '../../src/prisma/slave2';
 
 
 @Controller('/livros')
 export class LivroController {
-
   constructor(private readonly service: LivroService) {}
+
+  @Get()
+  findAllOnMaster() {
+    return this.service.findAllBooksOnMaster();
+  }
+
+  @Get('slave1')
+  findAllOnSlave1() {
+    return this.service.findAllBooksOnSlave1();
+  }
+
+  @Get('slave2')
+  findAllOnSlave2() {
+    return this.service.findAllBooksOnSlave2();
+  }
 
   @Post()
   create(@Body() body: { titulo: string; autor: string; ano: number }) {
