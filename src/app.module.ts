@@ -10,6 +10,8 @@ import { PrismaSlave1Service } from './prisma/prisma-slave1.service';
 import { PrismaSlave2Service } from './prisma/prisma-slave2.service';
 import './queue/sync.worker';
 import { QueueModule } from './queue/queue.module';
+import { LivroController } from './livro/livro.controller';
+import { LivroService } from './livro/livro.service';
 
 
 @Module({
@@ -20,10 +22,12 @@ import { QueueModule } from './queue/queue.module';
   controllers: [
     AppController,
     PessoaController,
+    LivroController,
   ],
   providers: [
     AppService,
     PessoaService,
+    LivroService,
     PrismaMasterService,
     PrismaSlave1Service,
     PrismaSlave2Service,

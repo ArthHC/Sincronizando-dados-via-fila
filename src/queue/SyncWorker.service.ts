@@ -45,6 +45,31 @@ export class SyncWorkerService implements OnApplicationBootstrap {
       throw error;
     }
   }
+  
+  private async syncLivro(db: any, data: any) {
+    try {
+      const existing = await db.livro.findUnique({ where: { id: data.id } });
+
+      if (data.deleted) {
+        await db.livro.delete({ where: { id: data.id } }).catch(() => {});
+        this.logger.log(`Livro ${data.id} deletado no slave`);
+      } else if (existing) {
+        await db.livro.update({
+          where: { id: data.id },
+          data: { titulo: data.titulo, autor: data.autor, ano: data.ano },
+        });
+        this.logger.log(`Livro ${data.id} atualizado no slave`);
+      } else {
+        await db.livro.create({
+          data: { id: data.id, titulo: data.titulo, autor: data.autor, ano: data.ano },
+        });
+        this.logger.log(`Livro ${data.id} criado no slave`);
+      }
+    } catch (error) {
+      this.logger.error(`Erro ao sincronizar livro ${data.id}: ${error.message}`);
+      throw error;
+    }
+  }
 
   startWorker() {
     this.logger.log('Conectando ao Redis...');
@@ -62,8 +87,12 @@ export class SyncWorkerService implements OnApplicationBootstrap {
               this.syncPessoa(this.slave1, data),
               this.syncPessoa(this.slave2, data)
             ]);
+          } else if (data.entity === 'livro') {
+            await Promise.all([
+              this.syncLivro(this.slave1, data),
+              this.syncLivro(this.slave2, data)
+            ]);
           }
-          
           return { status: 'success' };
         } catch (error) {
           this.logger.error(`Falha no job ${job.id}: ${error.message}`);
@@ -79,7 +108,6 @@ export class SyncWorkerService implements OnApplicationBootstrap {
       }
     );
 
-    // Adicione todos os listeners
     this.worker.on('ready', () => this.logger.log('✅ Worker conectado ao Redis e pronto'));
     this.worker.on('active', (job) => this.logger.log(`🏁 Job ${job.id} iniciado`));
     this.worker.on('completed', (job) => this.logger.log(`✅ Job ${job.id} completado`));
