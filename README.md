@@ -82,7 +82,7 @@ Backend: NestJS
 3. Postman (para teste dos endpoints)
 4. Git (opcional)
 
-### 1. Clonar o repositório ou baixar o ZIP
+### 1. Clonar o repositório, fazer um fork ou baixar o ZIP do projeto
 Clone o repositório atraves dos próprios comandos do git.
 ```bash
 git clone https://github.com/ArthHC/Sincronizando-dados-via-fila.git
