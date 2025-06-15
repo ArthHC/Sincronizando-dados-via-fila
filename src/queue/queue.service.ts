@@ -20,7 +20,8 @@ export class QueueService {
       const job = await this.queue.add('sync', data, {
         jobId: `${data.entity}_${data.id || 'new'}_${Date.now()}`,
         attempts: 3,
-        backoff: { type: 'exponential', delay: 1000 }
+        backoff: { type: 'exponential', delay: 1000 },
+        // delay: 5000 // Delay de 5 segundos para evitar sobrecarga
       });
 
       console.log(`✅ Job adicionado: ${job.id}`, data);
